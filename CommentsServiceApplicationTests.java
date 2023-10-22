@@ -1,6 +1,7 @@
 package com.comments.commentsservice;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,6 +46,8 @@ public class CommentsServiceApplicationTests {
 	@Spy
 	Comments comments;
 
+	private static final String output = "{\"id\":1,\"storyId\":1,\"userName\":\"Akshay11Singh\",\"comment\":\"Akshay Singh\",\"commentDate\":\"26-10-2023\"}";  
+	
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -54,6 +57,8 @@ public class CommentsServiceApplicationTests {
 		when(commentsRepo.findAllByStoryId(anyInt())).thenReturn(list);
 		when(commentsService.getCommentsByID((anyInt()))).thenReturn(Optional.of(comments));
 		assertNotNull(mockMvc.perform(get("/comments/1")).andDo(print()).andExpect(status().isOk()).andReturn()
+				.getResponse().getContentAsString());
+		assertEquals(output, mockMvc.perform(get("/comments/1")).andDo(print()).andExpect(status().isOk()).andReturn()
 				.getResponse().getContentAsString());
 
 	}
